@@ -3,11 +3,11 @@ import axios from 'axios';
 import _ from 'lodash'
 // import logo from './logo.svg';
 // import './App.css';
-import { Grid, Row, Jumbotron, Col, Table, Tab, Nav, NavItem, Accordion, Panel } from 'react-bootstrap';
+import { Grid, Row, Jumbotron } from 'react-bootstrap';
 import EquipmentChoiceComponent from './EquipmentChoiceComponent'
+import ButtonGroupWithHeaderComponent from './ButtonGroupWithHeaderComponent';
 
 // Bug: Observed that Wizard's starting equipment choices to make is 4 but only 3 are available
-
 class App extends Component {
 
   constructor(props) {
@@ -22,7 +22,7 @@ class App extends Component {
     return typeof variable !== 'undefined';
   }
 
-  fetchClasses() {
+  getClasses() {
     var self = this;
     axios
     .get('http://www.dnd5eapi.co/api/classes/')
@@ -34,19 +34,14 @@ class App extends Component {
 
       axios.all(promises)
       .then(axios.spread((...args) => {
-        console.log(args)
+        console.log("Classes", args)
         self.setState({
           classType: args
         });
-      }))
-
-      // _.forEach(response.data.results, function(v) {
-      //   self.fetchClassDetails(v.url);
-      // });
+      }));
     })
     .catch((error) => { console.log(error); });
   }
-
 
   getClassDetails(url) {
     var self = this;
@@ -61,7 +56,6 @@ class App extends Component {
       obj['proficiency'] = _.map(data.proficiencies, 'name')
       obj['subclass'] = _.map(data.subclasses, 'name')
       obj['savingThrows'] = _.map(data.saving_throws, 'name')
-      let result = self.isDefined(data.spellcasting) ? self.getSpelling(data.spellcasting.url) : []
       let spellUrl = self.isDefined(data.spellcasting) ? data.spellcasting.url : '';
       let startingEquipmentUrl = data.starting_equipment.url;
 
@@ -84,7 +78,7 @@ class App extends Component {
   }
 
   getSpelling(url) {
-    if (url == '')
+    if (url === '')
       return {};
 
     return axios
@@ -102,7 +96,6 @@ class App extends Component {
     .get(url)
     .then((response) => {
       var data = response.data;
-
       var obj = {}
       obj['startingEquipment'] = _.map(data.starting_equipment, function(e) {
         return { item: e.item.name, quantity: e.quantity }
@@ -122,6 +115,50 @@ class App extends Component {
         });
       });
       return obj
+    })
+    .catch((error) => { console.log(error); });
+  }
+
+  getToolTips() {
+    var self = this;
+    axios
+    .get('http://www.dnd5eapi.co/api/skills/')
+    .then((response) => {
+      let promises = [];
+      _.forEach(response.data.results, function(v) {
+        promises.push(self.getSkillDescription(v.url));
+      });
+
+      axios.all(promises)
+      .then(axios.spread((...args) => {
+        console.log("Skills ", args)
+        self.setState({
+          skills: args
+        });
+      }));
+    })
+    .catch((error) => { console.log(error); });
+  }
+
+  getSkillDescription(url) {
+    var self = this;
+    return axios
+    .get(url)
+    .then((response) => {
+      var obj = { name: response.data.name, desc: _.map(response.data.desc).join(', ')}
+      return obj
+    })
+    .catch((error) => { console.log(error); });
+  }
+
+  fetchClasses() {
+    var self = this;
+    axios
+    .get('http://www.dnd5eapi.co/api/classes/')
+    .then((response) => {
+      _.forEach(response.data.results, function(v) {
+        self.fetchClassDetails(v.url);
+      });
     })
     .catch((error) => { console.log(error); });
   }
@@ -242,46 +279,40 @@ class App extends Component {
 
   componentWillMount() {
     axios.defaults.baseURL = '';
-    axios.all([this.fetchClasses(), this.fetchTooltips()]);
+    axios.all([this.getClasses(), this.getToolTips()]);
   }
 
   render() {
 
     let liList = []
 
-    var self = this;
-
     _.forOwn(this.state.classType, function(value, key) { 
-      let prof = _.map(value.proficiency, function(p) {
-        return (<td>{p}</td>);
-      });
-
       let throws = _.join(value.savingThrows, ' ');
 
-      let starting = _.map(value.startingEquipment, function(s) {
-        return (<li>{s.item} x{s.quantity}</li>)
+      const startingEquipmentButtonText = _.map(value.startingEquipment, function(s) {
+        return s.item + " x" + s.quantity;
       });
 
-      starting = starting.length > 0 ? (<ul>{starting}</ul>) : (<p>No equipments</p>)
+      const startingEquipmentComponent = startingEquipmentButtonText.length > 0 ?
+      <ButtonGroupWithHeaderComponent headerText={'I start with: '} buttonText={startingEquipmentButtonText}/>: 
+      <ButtonGroupWithHeaderComponent headerText={'I start with: '} altButtonText={'No equipment'}/>;
+
+      const spellCastingComponent = value.spellcasting ?
+      <ButtonGroupWithHeaderComponent headerText={'Spells I cast: '} buttonText={value.spellcasting}/>: 
+      <ButtonGroupWithHeaderComponent headerText={'Spells I cast: '} altButtonText={'None'}/>;
+
 
       liList.push(
         <Jumbotron>
           <h1>{value.name} ({value.subclass})</h1>
           <h2>Stats: {throws}</h2>
           <h3>Health: {value.hits}</h3>
-          <p>This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>
 
-          <h3>I'm good with: </h3>
-          <Table responsive condensed>
-            <tbody>
-              <tr>
-                {prof}
-              </tr>
-            </tbody>
-          </Table>
+          <ButtonGroupWithHeaderComponent headerText={'I\'m good with: '} buttonText={value.proficiency}/>
+          
+          {spellCastingComponent}
 
-          <h3>I start off with:</h3>
-          {starting}
+          {startingEquipmentComponent}
           
           <EquipmentChoiceComponent data={value.startingEquipmentOptions}/>
         </Jumbotron>

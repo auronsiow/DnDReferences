@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import _ from 'lodash'
-import { Tab, Row, Col, Nav, NavItem, ButtonGroup, Button } from 'react-bootstrap';
+import { Tab, Row, Col, Nav, NavItem } from 'react-bootstrap';
+import ButtonGroupComponent from './ButtonGroupComponent';
 
 class ChoiceComponent extends Component {
   render() {
@@ -14,15 +15,15 @@ class ChoiceComponent extends Component {
 
     let choiceOptions = _.map(data, function(v, index) {
       let choiceIndex = index+1;
-      let options = _.map(v, function(o, index) { 
-        return (
-          <Button bsStyle="default">{o.item} x {o.quantity}</Button>
-        );
+
+      let buttonText = _.map(v, function(o) {
+        return o.item + " x" + o.quantity;
       });
+
       return (
         <Tab.Pane eventKey={"choices_"+choiceIndex}>
           <p>Pick: {v.choose} </p>
-          <ButtonGroup> {options} </ButtonGroup> 
+          <ButtonGroupComponent buttonText={buttonText} />
         </Tab.Pane>
       )
     });
