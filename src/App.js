@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import _ from 'lodash'
-// import logo from './logo.svg';
+
 // import './App.css';
-import { Grid, Row, Jumbotron } from 'react-bootstrap';
+
+import './Component.css';
+import { Grid, Row, Jumbotron, Nav, Navbar, NavDropdown, MenuItem } from 'react-bootstrap';
 import EquipmentChoiceComponent from './EquipmentChoiceComponent'
 import ButtonGroupWithHeaderComponent from './ButtonGroupWithHeaderComponent';
 
@@ -13,7 +15,7 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      skill: {}, classType: {}
+      skill: {}, classType: {}, loaded: false
     }
     this.constant = []
   }
@@ -34,9 +36,10 @@ class App extends Component {
 
       axios.all(promises)
       .then(axios.spread((...args) => {
-        console.log("Classes", args)
+        // console.log("Classes", args)
         self.setState({
-          classType: args
+          classType: args,
+          loaded: true
         });
       }));
     })
@@ -131,7 +134,7 @@ class App extends Component {
 
       axios.all(promises)
       .then(axios.spread((...args) => {
-        console.log("Skills ", args)
+        // console.log("Skills ", args)
         self.setState({
           skills: args
         });
@@ -141,138 +144,11 @@ class App extends Component {
   }
 
   getSkillDescription(url) {
-    var self = this;
     return axios
     .get(url)
     .then((response) => {
       var obj = { name: response.data.name, desc: _.map(response.data.desc).join(', ')}
       return obj
-    })
-    .catch((error) => { console.log(error); });
-  }
-
-  fetchClasses() {
-    var self = this;
-    axios
-    .get('http://www.dnd5eapi.co/api/classes/')
-    .then((response) => {
-      _.forEach(response.data.results, function(v) {
-        self.fetchClassDetails(v.url);
-      });
-    })
-    .catch((error) => { console.log(error); });
-  }
-
-  fetchClassDetails(url) {
-    var self = this;
-    axios
-    .get(url)
-    .then((response) => {
-      var data = response.data;
-
-      var obj = {};
-      obj['name'] = data.name;
-      obj['hits'] = data.hit_die;
-      obj['proficiency'] = _.map(data.proficiencies, 'name')
-      obj['subclass'] = _.map(data.subclasses, 'name')
-      obj['savingThrows'] = _.map(data.saving_throws, 'name')
-
-      var classTypeState = self.state.classType;
-
-      classTypeState[data.name] = obj
-
-      self.setState({
-        classType: classTypeState
-      });
-
-      self.isDefined(data.spellcasting) && self.fetchSpelling(data.spellcasting.url);
-      self.fetchStarting(data.starting_equipment.url)      
-    })
-    .catch((error) => { console.log(error); });
-  }
-
-  fetchSpelling(url) {
-    var self = this;
-    axios
-    .get(url)
-    .then((response) => {
-      var data = response.data;
-      var spelling = _.map(data.info, 'name')
-      var obj = self.state.classType[data.class.name]
-      obj['spellcasting'] = spelling
-
-      var classTypeState = self.state.classType;
-      classTypeState[data.name] = obj
-
-      self.setState({
-        classType: classTypeState
-      });
-    })
-    .catch((error) => { console.log(error); });
-  }
-
-  fetchStarting(url) {
-    var self = this;
-    axios
-    .get(url)
-    .then((response) => {
-      var data = response.data;
-
-      var obj = self.state.classType[data.class.name]
-      obj['startingEquipment'] = _.map(data.starting_equipment, function(e) {
-        return { item: e.item.name, quantity: e.quantity }
-      });
-
-      var choices = _.pickBy(data, function(value, key) {
-        return _.startsWith(key, "choice_");
-      });
-      
-      obj['startingEquipmentOptions'] = _.map(choices, function(choice) {
-        return _.map(choice, function(c) {
-          var tempo = _.map(c.from, function(i) {
-            return { item: i.item.name, quantity: i.quantity }
-          });
-          tempo['choose'] = c.choose;
-          return tempo;
-        });
-      });
-
-      // console.log(data.class.name, obj['startingEquipmentOptions'][0][0])
-      // console.log(data.class.name, JSON.stringify(obj['startingEquipmentOptions'], null, 2))
-
-      var classTypeState = self.state.classType;
-      classTypeState[data.name] = obj
-
-      self.setState({
-        classType: classTypeState
-      });
-    })
-    .catch((error) => { console.log(error); });
-  }
-
-  fetchTooltips() {
-    var self = this;
-    axios
-    .get('http://www.dnd5eapi.co/api/skills/')
-    .then((response) => {
-      for(var i=1; i <= response.data.count; i++) {
-        self.fetchSkillsDescription('http://www.dnd5eapi.co/api/skills/'+i)
-      }
-    })
-    .catch((error) => { console.log(error); });
-  }
-
-  fetchSkillsDescription(url) {
-    var self = this;
-    axios
-    .get(url)
-    .then((response) => {
-      var obj = { name: response.data.name, desc: _.map(response.data.desc).join(', ')}
-      var skillState = self.state.skill;
-      skillState[response.data.name] = obj
-      self.setState({
-        skill: skillState
-      });
     })
     .catch((error) => { console.log(error); });
   }
@@ -318,14 +194,63 @@ class App extends Component {
         </Jumbotron>
       );
     });
+
+    const menuItemList = _.map(this.state.classType, function(c, index) {
+      let eventKeyIndex = 1 + (index+1)/10;
+      return (<MenuItem eventKey={eventKeyIndex}>{c.name}</MenuItem>)
+    });
+
+    const dummyNavComponent = (
+      <Navbar inverse collapseOnSelect fixedTop className='navbar-custom'>
+        <Navbar.Header>
+          <Navbar.Brand>
+            <a href="#">DnD Class References</a>
+          </Navbar.Brand>
+          <Navbar.Toggle />
+        </Navbar.Header>
+        <Navbar.Collapse>
+          <Nav>
+            <NavDropdown eventKey={1} title="Classes" id="basic-nav-dropdown">
+            </NavDropdown>
+          </Nav>
+        </Navbar.Collapse>
+      </Navbar>
+    );
+
+    const navigationComponent = (
+      <Navbar inverse collapseOnSelect fixedTop>
+        <Navbar.Header>
+          <Navbar.Brand>
+            <a href="#">DnD Class References</a>
+          </Navbar.Brand>
+          <Navbar.Toggle />
+        </Navbar.Header>
+        <Navbar.Collapse>
+          <Nav>
+            <NavDropdown eventKey={1} title="Classes" id="basic-nav-dropdown">
+              {menuItemList}
+            </NavDropdown>
+          </Nav>
+        </Navbar.Collapse>
+      </Navbar>
+    );
+
+    const loaderComponent = (<div id='loader'>{dummyNavComponent}</div>);
+
+    if (!this.state.loaded) {
+      return loaderComponent;
+    }
     
     return (
-      <Grid>
-        <Row>
-        {liList}
-        </Row>
-      </Grid>
-      );
+      <div>
+        {navigationComponent}
+        <Grid className='GridComponent'>
+          <Row>
+          {liList}
+          </Row>
+        </Grid>
+      </div>
+    );
   }
 }
 
