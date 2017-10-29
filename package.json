@@ -4,7 +4,9 @@
   "private": true,
   "dependencies": {
     "axios": "^0.17.0",
+    "bootstrap": "3",
     "react": "^16.0.0",
+    "react-bootstrap": "^0.31.5",
     "react-dom": "^16.0.0",
     "react-scripts": "1.0.14",
     "whatwg-fetch": "^2.0.3"
