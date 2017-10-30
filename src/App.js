@@ -36,7 +36,6 @@ class App extends Component {
 
       axios.all(promises)
       .then(axios.spread((...args) => {
-        // console.log("Classes", args)
         self.setState({
           classType: args,
           loaded: true
@@ -57,6 +56,16 @@ class App extends Component {
       obj['name'] = data.name;
       obj['hits'] = data.hit_die;
       obj['proficiency'] = _.map(data.proficiencies, 'name')
+
+      var prof_choices = _.filter(data.proficiency_choices, function(o) { return o.type==="proficiencies"; })
+      
+      if (prof_choices.length > 1) {
+        prof_choices = _.filter(prof_choices, function(o) {
+          return (_.includes(o.from[0].name, "Skill:"));
+        });
+      }
+      prof_choices = prof_choices[0];
+      obj['proficiencyChoices'] = { choices: _.map(prof_choices.from, 'name'), choose: prof_choices.choose}
       obj['subclass'] = _.map(data.subclasses, 'name')
       obj['savingThrows'] = _.map(data.saving_throws, 'name')
       let spellUrl = self.isDefined(data.spellcasting) ? data.spellcasting.url : '';
@@ -177,19 +186,19 @@ class App extends Component {
       <ButtonGroupWithHeaderComponent headerText={'Spells I cast: '} buttonText={value.spellcasting}/>: 
       <ButtonGroupWithHeaderComponent headerText={'Spells I cast: '} altButtonText={'None'}/>;
 
-
       liList.push(
         <Jumbotron>
           <h1>{value.name} ({value.subclass})</h1>
           <h2>Stats: {throws}</h2>
           <h3>Health: {value.hits}</h3>
 
-          <ButtonGroupWithHeaderComponent headerText={'I\'m good with: '} buttonText={value.proficiency}/>
-          
+          <ButtonGroupWithHeaderComponent headerText={'I\'m proficient with: '} buttonText={value.proficiency}/>
+          <ButtonGroupWithHeaderComponent headerText={'I can pick ' + value.proficiencyChoices.choose + ' more proficiencies below:'} buttonText={value.proficiencyChoices.choices} />
+
           {spellCastingComponent}
 
           {startingEquipmentComponent}
-          
+
           <EquipmentChoiceComponent data={value.startingEquipmentOptions}/>
         </Jumbotron>
       );
