@@ -8,6 +8,7 @@ import './Component.css';
 import { Grid, Row, Jumbotron, Nav, Navbar, NavDropdown, MenuItem } from 'react-bootstrap';
 import EquipmentChoiceComponent from './EquipmentChoiceComponent'
 import ButtonGroupWithHeaderComponent from './ButtonGroupWithHeaderComponent';
+import OverlayTriggerButtonGroupComponent from './OverlayTriggerButtonGroupComponent';
 
 // Bug: Observed that Wizard's starting equipment choices to make is 4 but only 3 are available
 class App extends Component {
@@ -57,15 +58,20 @@ class App extends Component {
       obj['hits'] = data.hit_die;
       obj['proficiency'] = _.map(data.proficiencies, 'name')
 
-      var prof_choices = _.filter(data.proficiency_choices, function(o) { return o.type==="proficiencies"; })
+      var profChoices = _.filter(data.proficiency_choices, function(o) { return o.type==="proficiencies"; })
       
-      if (prof_choices.length > 1) {
-        prof_choices = _.filter(prof_choices, function(o) {
+      if (profChoices.length > 1) {
+        profChoices = _.filter(profChoices, function(o) {
           return (_.includes(o.from[0].name, "Skill:"));
         });
       }
-      prof_choices = prof_choices[0];
-      obj['proficiencyChoices'] = { choices: _.map(prof_choices.from, 'name'), choose: prof_choices.choose}
+      profChoices = profChoices[0];
+
+      var profChoicesMap = _.map(profChoices.from, function(p) {
+        return _.replace(p.name, "Skill: ", "")
+      })
+
+      obj['proficiencyChoices'] = { choices: profChoicesMap, choose: profChoices.choose}
       obj['subclass'] = _.map(data.subclasses, 'name')
       obj['savingThrows'] = _.map(data.saving_throws, 'name')
       let spellUrl = self.isDefined(data.spellcasting) ? data.spellcasting.url : '';
@@ -143,7 +149,6 @@ class App extends Component {
 
       axios.all(promises)
       .then(axios.spread((...args) => {
-        // console.log("Skills ", args)
         self.setState({
           skills: args
         });
@@ -171,6 +176,8 @@ class App extends Component {
 
     let liList = []
 
+    var self = this;
+
     _.forOwn(this.state.classType, function(value, key) { 
       let throws = _.join(value.savingThrows, ' ');
 
@@ -193,7 +200,11 @@ class App extends Component {
           <h3>Health: {value.hits}</h3>
 
           <ButtonGroupWithHeaderComponent headerText={'I\'m proficient with: '} buttonText={value.proficiency}/>
-          <ButtonGroupWithHeaderComponent headerText={'I can pick ' + value.proficiencyChoices.choose + ' more proficiencies below:'} buttonText={value.proficiencyChoices.choices} />
+
+          <OverlayTriggerButtonGroupComponent 
+            buttonText={value.proficiencyChoices.choices} 
+            triggerText={self.state.skills} 
+            headerText={'I can pick ' + value.proficiencyChoices.choose + ' more proficiencies below:'} />
 
           {spellCastingComponent}
 
