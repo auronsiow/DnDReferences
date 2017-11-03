@@ -15,7 +15,7 @@ class ButtonGroupWithHeaderComponent extends Component {
 	      }
 	      {
 	      	altButtonText && 
-	      	<p class='small-size'>{altButtonText}</p>
+	      	<p className='small-size'>{altButtonText}</p>
 	      }
       </div>
     )

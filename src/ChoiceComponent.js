@@ -22,7 +22,7 @@ class ChoiceComponent extends Component {
 
       return (
         <Tab.Pane eventKey={"choices_"+choiceIndex}>
-          <p class='equipmentChoicePickText'>Pick: {v.choose} </p>
+          <p className='equipmentChoicePickText'>Pick: {v.choose} </p>
           <ButtonGroupComponent buttonText={buttonText} />
         </Tab.Pane>
       )
