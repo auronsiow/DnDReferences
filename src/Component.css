@@ -31,3 +31,7 @@ div.img.loaderImage {
 	background-color: grey;
 	background-image: none;
 }
+
+.btn-custom {
+    background-color: grey;   
+}

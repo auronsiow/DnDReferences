@@ -8,7 +8,7 @@ class ButtonGroupWithHeaderComponent extends Component {
     const altButtonText = this.props.altButtonText;
 
     return (
-			<div>
+	  	<div>
 	      <h3>{headerText}</h3>
 	      {
 	      	buttonText && 

@@ -3,7 +3,7 @@ import _ from 'lodash'
 import { ButtonGroup } from 'react-bootstrap';
 import OverlayTriggerButton from './OverlayTriggerButton';
 
-class OverlayTriggerButtonGroupComponent extends Component {
+class AbilityComponent extends Component {
   render() {
   	const buttonText = this.props.buttonText;
     const triggerTextArr = this.props.triggerText;
@@ -12,7 +12,7 @@ class OverlayTriggerButtonGroupComponent extends Component {
     let overlayTriggerButtons = _.map(buttonText, function(d) { 
       const triggerText = _.find(triggerTextArr, {name: d});
       return (
-        <OverlayTriggerButton className='btn-custom' bsStyle="default" buttonText={d} titleText={d} triggerText={triggerText.desc} />
+        <OverlayTriggerButton bsStyle="default" buttonText={d} titleText={triggerText.fullname} triggerText={triggerText.desc} />
       );
     });
     return (
@@ -24,4 +24,4 @@ class OverlayTriggerButtonGroupComponent extends Component {
   }
 }
 
-export default OverlayTriggerButtonGroupComponent;
+export default AbilityComponent;
