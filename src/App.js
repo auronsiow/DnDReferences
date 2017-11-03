@@ -22,7 +22,7 @@ class App extends Component {
   getClasses() {
     var self = this;
     axios
-    .get('http://www.dnd5eapi.co/api/classes/')
+    .get('//www.dnd5eapi.co/api/classes/')
     .then((response) => {
       let promises = [];
       _.forEach(response.data.results, function(v) {
@@ -134,7 +134,7 @@ class App extends Component {
   getToolTips() {
     var self = this;
     axios
-    .get('http://www.dnd5eapi.co/api/skills/')
+    .get('//www.dnd5eapi.co/api/skills/')
     .then((response) => {
       let promises = [];
       _.forEach(response.data.results, function(v) {
@@ -164,7 +164,7 @@ class App extends Component {
   getAbilityMapping() {
     var self = this;
     axios
-    .get('http://www.dnd5eapi.co/api/ability-scores/')
+    .get('//www.dnd5eapi.co/api/ability-scores/')
     .then((response) => {
       let promises = [];
       _.forEach(response.data.results, function(v) {

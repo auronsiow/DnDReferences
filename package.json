@@ -2,9 +2,11 @@
   "name": "react-project",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://auronsiow.github.io/DnDReferences",
   "dependencies": {
     "axios": "^0.17.0",
     "bootstrap": "3",
+    "gh-pages": "^1.0.0",
     "react": "^16.0.0",
     "react-bootstrap": "^0.31.5",
     "react-dom": "^16.0.0",
@@ -13,6 +15,8 @@
     "whatwg-fetch": "^2.0.3"
   },
   "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
