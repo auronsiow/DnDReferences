@@ -6,7 +6,6 @@ class ButtonGroupWithHeaderComponent extends Component {
   	const buttonText = this.props.buttonText;
     const headerText = this.props.headerText;
     const altButtonText = this.props.altButtonText;
-
     return (
 	  	<div>
 	      <h3>{headerText}</h3>
@@ -16,7 +15,7 @@ class ButtonGroupWithHeaderComponent extends Component {
 	      }
 	      {
 	      	altButtonText && 
-	      	<p>{altButtonText}</p>
+	      	<p class='small-size'>{altButtonText}</p>
 	      }
       </div>
     )

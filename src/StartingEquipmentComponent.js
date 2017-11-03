@@ -6,7 +6,7 @@ class StartingEquipmentComponent extends Component {
     const startingEquipmentArray = this.props.startingEquipmentArray;
     const buttonComponent = startingEquipmentArray.length > 0 ?
       <ButtonGroupWithHeaderComponent headerText={'I start with: '} buttonText={startingEquipmentArray}/>: 
-      <ButtonGroupWithHeaderComponent headerText={'I start with: '} altButtonText={'No equipment'}/>;
+      <ButtonGroupWithHeaderComponent headerText={'I start with: '} altButtonText={'No equipments'}/>;
 
     return (
         buttonComponent

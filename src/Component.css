@@ -3,11 +3,10 @@
 }
 
 div.loader {
-    position:relative;
-    height: 100%;
-    width:100%;
+  position:relative;
+  height: 100%;
+  width:100%;
 }
-
 
 div.img.loaderImage {
     position:absolute;
@@ -33,10 +32,14 @@ div.img.loaderImage {
 }
 
 .btn-custom {
-    background-color: grey;   
+  background-color: grey;   
 }
 
 p.equipmentChoicePickText {
-    font-size: 18px;
-    margin-bottom: 5px;
+  font-size: 18px;
+  margin-bottom: 5px;
+}
+
+p.small-size {
+  font-size: 18px;
 }
