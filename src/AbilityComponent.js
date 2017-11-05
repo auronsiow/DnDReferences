@@ -12,7 +12,7 @@ class AbilityComponent extends Component {
     let overlayTriggerButtons = _.map(buttonText, function(d) { 
       const triggerText = _.find(triggerTextArr, {name: d});
       return (
-        <OverlayTriggerButton bsStyle="default" buttonText={d} titleText={triggerText.fullname} triggerText={triggerText.desc} />
+        <OverlayTriggerButton key={'key_overlay_tri_btn_'+d} bsStyle="default" buttonText={d} titleText={triggerText.fullname} triggerText={triggerText.desc} />
       );
     });
     return (

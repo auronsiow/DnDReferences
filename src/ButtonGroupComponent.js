@@ -8,7 +8,7 @@ class ButtonGroupComponent extends Component {
 
     let buttons = _.map(buttonText, function(o) { 
       return (
-        <Button bsStyle="default">{o}</Button>
+        <Button key={'key_'+o} bsStyle="default">{o}</Button>
       );
     });
 

@@ -24,7 +24,7 @@ class CharacterComponent extends Component {
       const spellcastingArray = value.spellcasting ? value.spellcasting : [];
 
       liList.push(
-        <Jumbotron id={'jumbo_'+value.name}>
+        <Jumbotron key={'key_jumbo_'+value.name} id={'jumbo_'+value.name}>
           <h1>{value.name}</h1>
           <h3>Health: {value.hits}</h3>
           <AbilityComponent headerText={'Abilities: '} buttonText={value.savingThrows} triggerText={abilities} />

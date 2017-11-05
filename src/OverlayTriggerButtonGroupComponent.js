@@ -12,7 +12,7 @@ class OverlayTriggerButtonGroupComponent extends Component {
     let overlayTriggerButtons = _.map(buttonText, function(d) { 
       const triggerText = _.find(triggerTextArr, {name: d});
       return (
-        <OverlayTriggerButton className='btn-custom' bsStyle="default" buttonText={d} titleText={d} triggerText={triggerText.desc} />
+        <OverlayTriggerButton key={'key_'+d} className='btn-custom' bsStyle="default" buttonText={d} titleText={d} triggerText={triggerText.desc} />
       );
     });
     return (

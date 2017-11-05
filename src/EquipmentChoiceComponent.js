@@ -9,7 +9,7 @@ class EquipmentChoiceComponent extends Component {
     const panels = _.map(data, function(v, index) {
       var choiceIndex = index + 1;
       return (
-        <Panel header={"Equipment Set #"+choiceIndex} eventKey={""+choiceIndex}>
+        <Panel key={'key_panel_'+choiceIndex} header={"Equipment Set #"+choiceIndex} eventKey={""+choiceIndex}>
           <ChoiceComponent data={v} />
         </Panel>
       );

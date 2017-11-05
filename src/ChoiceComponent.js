@@ -9,7 +9,7 @@ class ChoiceComponent extends Component {
     let numChoices = _.map(data, function(v, index) {
       let optionIndex = index+1;
       return (
-        <NavItem eventKey={"choices_"+optionIndex}> {'Choice ' + optionIndex} </NavItem>
+        <NavItem key={'key_chioces_'+optionIndex} eventKey={"choices_"+optionIndex}> {'Choice ' + optionIndex} </NavItem>
       );
     });
 
@@ -21,7 +21,7 @@ class ChoiceComponent extends Component {
       });
 
       return (
-        <Tab.Pane eventKey={"choices_"+choiceIndex}>
+        <Tab.Pane key={'key_tabpanel_'+choiceIndex} eventKey={"choices_"+choiceIndex}>
           <p className='equipmentChoicePickText'>Pick: {v.choose} </p>
           <ButtonGroupComponent buttonText={buttonText} />
         </Tab.Pane>

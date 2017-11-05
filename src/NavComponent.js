@@ -12,7 +12,7 @@ class NavComponent extends Component {
 
     const menuItemList = _.map(classType, function(c, index) {
       let eventKeyIndex = 1 + (index+1)/10;
-      return (<MenuItem onSelect={scrollToClassType.bind(this, c)} eventKey={eventKeyIndex}>{c}</MenuItem>)
+      return (<MenuItem key={'key_menu_'+c} onSelect={scrollToClassType.bind(this, c)} eventKey={eventKeyIndex}>{c}</MenuItem>)
     });
 
     return (
