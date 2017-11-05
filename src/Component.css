@@ -8,13 +8,22 @@ div.loader {
   width:100%;
 }
 
+p.loaderText {
+  position: fixed;
+  top: 60%;
+  left: 50%;
+  font-size: 3vh;
+  transform: translate(-50%, -50%);
+  color: grey;
+}
+
 div.img.loaderImage {
-    position:absolute;
-    top:0;
-    left:0;
-    right:0;
-    bottom:0;
-    margin:auto;
+  position:absolute;
+  top:0;
+  left:0;
+  right:0;
+  bottom:0;
+  margin:auto;
 }
 
 #loader {
@@ -42,4 +51,28 @@ p.equipmentChoicePickText {
 
 p.small-size {
   font-size: 18px;
+}
+
+footer {
+  display: block;
+  padding-top: 50px;
+  padding-bottom: 50px;
+  background-color: rgb(45,45,45);
+  color: rgb(139,139,139);
+  text-align: center;
+}
+
+div.intro {
+  height: 100vh;
+  background-color: rgb(135,135,135);
+}
+
+p.introDescText {
+  font-size: 5vh;
+  color: white;
+  position: absolute;
+  text-align: center;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
