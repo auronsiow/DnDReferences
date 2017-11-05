@@ -26,7 +26,7 @@ class CharacterComponent extends Component {
       liList.push(
         <Jumbotron key={'key_jumbo_'+value.name} id={'jumbo_'+value.name}>
           <h1>{value.name}</h1>
-          <h3>Health: {value.hits}</h3>
+          <h2>Health: {value.hits}</h2>
           <AbilityComponent headerText={'Abilities: '} buttonText={value.savingThrows} triggerText={abilities} />
           <ButtonGroupWithHeaderComponent headerText={'I\'m proficient with: '} buttonText={value.proficiency}/>
           <ProficiencyChoiceComponent proficiencyChoicesArray={value.proficiencyChoices} skills={skills} />
