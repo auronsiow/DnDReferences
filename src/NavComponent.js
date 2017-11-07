@@ -7,7 +7,7 @@ class NavComponent extends Component {
   render() {
     const classType = this.props.classType;
     const scrollToClassType = this.props.scrollToClassType;
-    const pageHasLoaded = this.props.pageHasLoaded;
+    const pageHasLoaded = classType.length > 0;
     const className = pageHasLoaded ? '' : 'navbar-custom';
 
     const menuItemList = _.map(classType, function(c, index) {

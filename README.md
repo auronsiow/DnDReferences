@@ -14,9 +14,15 @@ You may view the demo here: https://auronsiow.github.io/DnDReferences/
 3) `yarn` or `npm install` to install all node_modules
 4) `yarn start` or `npm start` to run the project (It will direct you to the localhost:3000 on your browser)
 
+## Known Issue
+##### Mixed Content Error #####
+This is due to page being hosted on HTTPS (on GitHub) but the DnD API endpoint is using HTTP (insecure endpoint). Thus, after production deployment of this project with GitHub Pages, the load continues to load but error messages are shown on the console. As temporary work around for this issue, have to 'load unsafe scripts' as mentioned above.
+However, on development environment, this issue does not surface.
+
 ## Future improvements
 1) Add in unit test for each components
 2) Integration with Jenkins
+3) Fix the known issue above regarding Mixed Content
 
 ## Credits
 This project was bootstrapped courtesy of [Create React App](https://github.com/facebookincubator/create-react-app)
